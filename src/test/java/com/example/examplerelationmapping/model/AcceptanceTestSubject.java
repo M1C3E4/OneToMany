@@ -7,9 +7,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,11 +44,24 @@ public class AcceptanceTestSubject {
         List<Subject> subject1 = objectMapper.readValue(jsonAsString, new TypeReference<List<Subject>>() {});
         assertEquals(subject.getId(), subject1.get(0).getId());
         assertEquals(subject.getName(), subject1.get(0).getName());
-
-
-
+    }
+    @Test
+    @DisplayName("http://localhost:8080/addSubject -> 200")
+    public void should_add_new_subject() throws Exception {
+        Teacher teacher = new Teacher();
+        mockMvc.perform(MockMvcRequestBuilders.post("/subject/addSubject")
+                .content(asJsonString(new Subject(2l, "Matematyka", teacher)))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").exists());
     }
 
-
-
+    public static String asJsonString(final Object object) {
+        try {
+            return new ObjectMapper().writeValueAsString(object);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

@@ -16,7 +16,7 @@ public class Subject implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private Teacher teacher;
 
 }
