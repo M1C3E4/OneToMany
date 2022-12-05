@@ -1,5 +1,6 @@
 package com.example.examplerelationmapping.model;
 
+import com.example.examplerelationmapping.service.ServiceTeacherImpl;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
@@ -22,15 +23,34 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class AcceptanceTestSubject {
+public class AcceptanceSubjectTests {
 
     @Test
     void contextLoad() {
     }
     @Autowired
+    private ServiceTeacherImpl serviceTeacher;
+    @Autowired
     private MockMvc mockMvc;
     @Autowired
     private ObjectMapper objectMapper;
+
+    @Test
+    @DisplayName("http://localhost:8080/subjectById/{id} ->200")
+    public void should_return_subject_by_id() throws Exception {
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/subject/subjectById/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("id", "1L"))
+                .andDo(print())
+                .andExpect(status().isOk());
+        Teacher teacher = serviceTeacher.findById(1L).orElse(null);
+        Subject expected = new Subject(1L, "Informatyka", teacher);
+        String jsonAsString = resultActions.andReturn().getResponse().getContentAsString();
+        Subject subject = objectMapper.readValue(jsonAsString, Subject.class);
+        assertEquals(expected.getId(), subject.getId());
+        assertEquals(expected.getName(), subject.getName());
+        assertEquals(expected.getTeacher(), teacher);
+    }
 
     @Test
     @DisplayName("http://localhost:8080/getAllSubjects -> 200")
@@ -38,10 +58,10 @@ public class AcceptanceTestSubject {
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/getAllSubjects"))
                 .andDo(print())
                 .andExpect(status().isOk());
-        Teacher teacher = new Teacher(1l, "Maciej", new ArrayList<>());
-        Subject subject = new Subject(1l, "Informatyka", teacher);
+        Teacher teacher = new Teacher(1L, "Maciej", new ArrayList<>());
+        Subject subject = new Subject(1L, "Informatyka", teacher);
         String jsonAsString = resultActions.andReturn().getResponse().getContentAsString();
-        List<Subject> subject1 = objectMapper.readValue(jsonAsString, new TypeReference<List<Subject>>() {});
+        List<Subject> subject1 = objectMapper.readValue(jsonAsString, new TypeReference<>() {});
         assertEquals(subject.getId(), subject1.get(0).getId());
         assertEquals(subject.getName(), subject1.get(0).getName());
     }
@@ -50,7 +70,7 @@ public class AcceptanceTestSubject {
     public void should_add_new_subject() throws Exception {
         Teacher teacher = new Teacher();
         mockMvc.perform(MockMvcRequestBuilders.post("/subject/addSubject")
-                .content(asJsonString(new Subject(2l, "Matematyka", teacher)))
+                .content(asJsonString(new Subject(2L, "Matematyka", teacher)))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())

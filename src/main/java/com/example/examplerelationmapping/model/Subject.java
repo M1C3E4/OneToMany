@@ -18,5 +18,4 @@ public class Subject implements Serializable {
     private String name;
     @ManyToOne(cascade = CascadeType.ALL)
     private Teacher teacher;
-
 }
