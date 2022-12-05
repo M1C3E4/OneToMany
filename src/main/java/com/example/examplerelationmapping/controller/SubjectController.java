@@ -17,6 +17,11 @@ public class SubjectController {
     @Autowired
     private ServiceTeacherImpl serviceTeacher;
 
+    @DeleteMapping("/deleteById/{id}")
+    public void deleteById(@PathVariable("id") Long id){
+        serviceSubject.removeById(id);
+    }
+
     @GetMapping("/findSubjectWhereNameLikeString")
     List<Subject> findSubjectWhereNameLikeString(){
         return serviceSubject.findSubjectWhereLikeString();

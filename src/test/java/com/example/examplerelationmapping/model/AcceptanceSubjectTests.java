@@ -37,6 +37,13 @@ public class AcceptanceSubjectTests {
     private ObjectMapper objectMapper;
 
     @Test
+    @DisplayName("https://localhost:8080/subject/deleteById/{id} -> 200")
+    public void should_delete_subject_by_id() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.delete("/subject/deleteById/7"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
     @DisplayName("http://localhost:8080/subject/findSubjectWhereNameLikeString -> 200")
     public void findSubjectWhereNameLikeString() throws Exception {
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/subject/findSubjectWhereNameLikeString")
