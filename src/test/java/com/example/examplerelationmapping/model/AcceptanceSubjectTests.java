@@ -39,7 +39,7 @@ public class AcceptanceSubjectTests {
     @Test
     @DisplayName("https://localhost:8080/subject/deleteById/{id} -> 200")
     public void should_delete_subject_by_id() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.delete("/subject/deleteById/7"))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/subject/deleteById/3"))
                 .andExpect(status().isOk());
     }
 

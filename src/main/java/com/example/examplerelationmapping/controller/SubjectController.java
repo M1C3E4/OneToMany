@@ -17,10 +17,11 @@ public class SubjectController {
     @Autowired
     private ServiceTeacherImpl serviceTeacher;
 
+    @GetMapping("/findDistinctTopByName/{name}")
+    List<Subject> findDistinctTop1ByName(@PathVariable String name){return serviceSubject.findDistinctTop1ByName(name);}
+
     @DeleteMapping("/deleteById/{id}")
-    public void deleteById(@PathVariable("id") Long id){
-        serviceSubject.removeById(id);
-    }
+    public void deleteById(@PathVariable("id") Long id){serviceSubject.removeById(id);}
 
     @GetMapping("/findSubjectWhereNameLikeString")
     List<Subject> findSubjectWhereNameLikeString(){

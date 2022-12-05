@@ -14,4 +14,5 @@ public interface ServiceSubject {
     @Query(value = "SELECT t from Subject t WHERE t.name LIKE '%ciej%' ")
     List<Subject> findSubjectWhereLikeString();
     void removeById(Long id);
+    List<Subject> findDistinctTop1ByName(String name);
 }
