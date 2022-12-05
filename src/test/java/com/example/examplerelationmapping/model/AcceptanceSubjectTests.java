@@ -28,6 +28,7 @@ public class AcceptanceSubjectTests {
     @Test
     void contextLoad() {
     }
+
     @Autowired
     private ServiceTeacherImpl serviceTeacher;
     @Autowired
@@ -36,11 +37,11 @@ public class AcceptanceSubjectTests {
     private ObjectMapper objectMapper;
 
     @Test
-    @DisplayName("http://localhost:8080/subjectById/{id} ->200")
-    public void should_return_subject_by_id() throws Exception {
-        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/subject/subjectById/1")
-                .contentType(MediaType.APPLICATION_JSON)
-                .param("id", "1L"))
+    @DisplayName("http://localhost:8080/subject/subjectByName/{name}")
+    public void should_return_subject_by_name() throws Exception {
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/subject/subjectByName/Informatyka")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .param("name", "Informatyka"))
                 .andDo(print())
                 .andExpect(status().isOk());
         Teacher teacher = serviceTeacher.findById(1L).orElse(null);
@@ -53,25 +54,44 @@ public class AcceptanceSubjectTests {
     }
 
     @Test
-    @DisplayName("http://localhost:8080/getAllSubjects -> 200")
-    public void should_return_all_Subject() throws Exception{
-        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/getAllSubjects"))
+    @DisplayName("http://localhost:8080/subject/subjectById/{id} ->200")
+    public void should_return_subject_by_id() throws Exception {
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/subject/subjectById/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .param("id", "1L"))
+                .andDo(print())
+                .andExpect(status().isOk());
+        Teacher teacher = serviceTeacher.findById(1L).orElse(null);
+        Subject expected = new Subject(1L, "Informatyka", teacher);
+        String jsonAsString = resultActions.andReturn().getResponse().getContentAsString();
+        Subject subject = objectMapper.readValue(jsonAsString, Subject.class);
+        assertEquals(expected.getId(), subject.getId());
+        assertEquals(expected.getName(), subject.getName());
+        assertEquals(expected.getTeacher(), teacher);
+    }
+
+    @Test
+    @DisplayName("http://localhost:8080/subject/getAllSubjects -> 200")
+    public void should_return_all_Subject() throws Exception {
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("subject/getAllSubjects"))
                 .andDo(print())
                 .andExpect(status().isOk());
         Teacher teacher = new Teacher(1L, "Maciej", new ArrayList<>());
         Subject subject = new Subject(1L, "Informatyka", teacher);
         String jsonAsString = resultActions.andReturn().getResponse().getContentAsString();
-        List<Subject> subject1 = objectMapper.readValue(jsonAsString, new TypeReference<>() {});
+        List<Subject> subject1 = objectMapper.readValue(jsonAsString, new TypeReference<>() {
+        });
         assertEquals(subject.getId(), subject1.get(0).getId());
         assertEquals(subject.getName(), subject1.get(0).getName());
     }
+
     @Test
-    @DisplayName("http://localhost:8080/addSubject -> 200")
+    @DisplayName("http://localhost:8080/subject/addSubject -> 200")
     public void should_add_new_subject() throws Exception {
         Teacher teacher = new Teacher();
         mockMvc.perform(MockMvcRequestBuilders.post("/subject/addSubject")
-                .content(asJsonString(new Subject(2L, "Matematyka", teacher)))
-                .contentType(MediaType.APPLICATION_JSON))
+                        .content(asJsonString(new Subject(2L, "Matematyka", teacher)))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").exists());
