@@ -37,7 +37,32 @@ public class AcceptanceSubjectTests {
     private ObjectMapper objectMapper;
 
     @Test
-    @DisplayName("http://localhost:8080/subject/subjectByName/{name}")
+    @DisplayName("http://localhost:8080/subject/findSubjectWhereNameLikeString -> 200")
+    public void findSubjectWhereNameLikeString() throws Exception {
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/subject/findSubjectWhereNameLikeString")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
+        Teacher teacher = serviceTeacher.findById(1L).orElse(null);
+        Teacher teacher1 = serviceTeacher.findById(4L).orElse(null);
+        Subject expected = new Subject(1L, "Informatyka", teacher);
+        Subject expected1 = new Subject(2L, "Matematyka", teacher1);
+        String jsonAsString = resultActions.andReturn().getResponse().getContentAsString();
+        List<Subject> subject = objectMapper.readValue(jsonAsString, new TypeReference<>() {
+        });
+        assertEquals(expected.getId(), subject.get(0).getId());
+        assertEquals(expected.getName(), subject.get(0).getName());
+        assertEquals(expected.getTeacher(), teacher);
+        assertEquals(expected1.getId(), subject.get(1).getId());
+        assertEquals(expected1.getName(), subject.get(1).getName());
+        assertEquals(expected1.getTeacher(), teacher1);
+
+
+
+    }
+
+    @Test
+    @DisplayName("http://localhost:8080/subject/subjectByName/{name} ->200")
     public void should_return_subject_by_name() throws Exception {
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/subject/subjectByName/Informatyka")
                         .contentType(MediaType.APPLICATION_JSON)

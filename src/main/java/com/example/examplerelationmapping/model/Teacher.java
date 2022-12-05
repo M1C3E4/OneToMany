@@ -22,6 +22,6 @@ public class Teacher implements Serializable {
     private Long id;
     private String name;
     @JsonIgnore
-    @OneToMany(mappedBy = "teacher")
+    @OneToMany(mappedBy = "teacher", fetch = FetchType.EAGER)
     private List<Subject> subject;
 }
