@@ -31,4 +31,6 @@ public class ServiceSubjectImpl implements ServiceSubject {
     public List<Subject> findSubjectWhereLikeString() {return subjectRepository.findSubjectWhereLikeString();}
     @Override
     public void removeById(Long id) {subjectRepository.deleteById(id);}
+    @Override
+    public List<Subject> findDistinctTop1ByName(String name) {return subjectRepository.findDistinctTop1ByName(name);}
 }
