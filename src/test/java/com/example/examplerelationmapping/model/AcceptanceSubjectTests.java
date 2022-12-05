@@ -37,6 +37,23 @@ public class AcceptanceSubjectTests {
     private ObjectMapper objectMapper;
 
     @Test
+    @DisplayName("http://localhost:8080/subject/findDistinctTop1ByName -> 200")
+    public void should_return_list_subject_distinct_top_by_name() throws Exception {
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/subject/findDistinctTopByName/Informatyka")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
+        Teacher teacher = serviceTeacher.findById(1L).orElse(null);
+        Subject expected = new Subject(1L, "Informatyka", teacher);
+        String jsonAsString = resultActions.andReturn().getResponse().getContentAsString();
+        List<Subject> subjects = objectMapper.readValue(jsonAsString, new TypeReference<>() {});
+        assertEquals(expected.getId(), subjects.get(0).getId());
+        assertEquals(expected.getName(), subjects.get(0).getName());
+        assertEquals(expected.getTeacher(), teacher);
+
+    }
+
+    @Test
     @DisplayName("https://localhost:8080/subject/deleteById/{id} -> 200")
     public void should_delete_subject_by_id() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.delete("/subject/deleteById/3"))
