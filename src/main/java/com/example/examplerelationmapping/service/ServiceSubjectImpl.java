@@ -19,12 +19,12 @@ public class ServiceSubjectImpl implements ServiceSubject {
     public List<Subject> findAll() {
         return subjectRepository.findAll();
     }
-
     @Override
     public Optional<Subject> findById(Long id) {
         return subjectRepository.findById(id);
     }
-
     @Override
     public Subject createSubject(Subject subject) {return subjectRepository.save(subject);}
+    @Override
+    public Optional<Subject> findByName(String name) {return subjectRepository.findByName(name);}
 }

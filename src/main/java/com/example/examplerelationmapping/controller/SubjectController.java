@@ -16,14 +16,18 @@ public class SubjectController {
     private ServiceSubjectImpl serviceSubject;
     @Autowired
     private ServiceTeacherImpl serviceTeacher;
-
     @GetMapping("/subjectById/{id}")
     Optional<Subject> getFindById(@PathVariable Long id){
         return serviceSubject.findById(id);
     }
 
+    @GetMapping("/subjectByName/{name}")
+    Optional<Subject> getSubjectByName(@PathVariable String name){
+        return serviceSubject.findByName(name);
+    }
+
     @GetMapping("/getAllSubjects")
-    List<Subject> getSubject(){
+    List<Subject> getSubjects(){
         return serviceSubject.findAll();
     }
 
