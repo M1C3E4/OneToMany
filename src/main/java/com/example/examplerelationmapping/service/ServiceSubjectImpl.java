@@ -27,4 +27,6 @@ public class ServiceSubjectImpl implements ServiceSubject {
     public Subject createSubject(Subject subject) {return subjectRepository.save(subject);}
     @Override
     public Optional<Subject> findByName(String name) {return subjectRepository.findByName(name);}
+    @Override
+    public List<Subject> findSubjectWhereLikeString() {return subjectRepository.findSubjectWhereLikeString();}
 }
