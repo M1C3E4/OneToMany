@@ -12,12 +12,10 @@ import java.util.List;
 public class TeacherController {
     @Autowired
     private ServiceTeacherImpl serviceTeacherImpl;
-
     @GetMapping("/getAllTeachers")
     List<Teacher> getTeachers(){
         return serviceTeacherImpl.findAll();
     }
-
     @PostMapping("/addTeacher")
     Teacher addTeacher(@RequestBody Teacher teacher){
         return serviceTeacherImpl.createTeacher(teacher);

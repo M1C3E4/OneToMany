@@ -14,17 +14,14 @@ public class ServiceTeacherImpl implements ServiceTeacher {
 
     @Autowired
     private TeacherRepository teacherRepository;
-
     @Override
     public List<Teacher> findAll() {
         return teacherRepository.findAll();
     }
-
     @Override
     public Optional<Teacher> findById(Long id) {
         return teacherRepository.findById(id);
     }
-
     @Override
     public Teacher createTeacher(Teacher teacher) {
         return teacherRepository.save(teacher);

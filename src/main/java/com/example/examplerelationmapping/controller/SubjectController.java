@@ -16,6 +16,12 @@ public class SubjectController {
     private ServiceSubjectImpl serviceSubject;
     @Autowired
     private ServiceTeacherImpl serviceTeacher;
+
+    @GetMapping("/findSubjectWhereNameLikeString")
+    List<Subject> findSubjectWhereNameLikeString(){
+        return serviceSubject.findSubjectWhereLikeString();
+    }
+
     @GetMapping("/subjectById/{id}")
     Optional<Subject> getFindById(@PathVariable Long id){
         return serviceSubject.findById(id);
