@@ -29,4 +29,6 @@ public class ServiceSubjectImpl implements ServiceSubject {
     public Optional<Subject> findByName(String name) {return subjectRepository.findByName(name);}
     @Override
     public List<Subject> findSubjectWhereLikeString() {return subjectRepository.findSubjectWhereLikeString();}
+    @Override
+    public Optional<Subject> removeById(Long id) {return subjectRepository.removeById(id);}
 }
