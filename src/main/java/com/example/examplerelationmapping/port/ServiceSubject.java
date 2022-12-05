@@ -9,4 +9,6 @@ public interface ServiceSubject {
     List<Subject> findAll();
     Optional<Subject> findById(Long id);
     Subject createSubject(Subject subject);
+    Optional<Subject> findByName(String name);
+
 }
