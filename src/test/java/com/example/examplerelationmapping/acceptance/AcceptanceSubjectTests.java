@@ -7,7 +7,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -27,19 +26,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class AcceptanceSubjectTests {
 
-    @Test
-    void contextLoad() {
+    private final ServiceTeacherImpl serviceTeacher;
+    private final MockMvc mockMvc;
+    private final ObjectMapper objectMapper;
+
+    public AcceptanceSubjectTests(ServiceTeacherImpl serviceTeacher, MockMvc mockMvc, ObjectMapper objectMapper) {
+        this.serviceTeacher = serviceTeacher;
+        this.mockMvc = mockMvc;
+        this.objectMapper = objectMapper;
     }
 
-    @Autowired
-    private ServiceTeacherImpl serviceTeacher;
-    @Autowired
-    private MockMvc mockMvc;
-    @Autowired
-    private ObjectMapper objectMapper;
-
     @Test
-    @DisplayName("https://localhost:8080/subject/{subjectId}/teacher/{teacherId}")
+    @DisplayName("https://localhost:8080/subject/{subjectId}/teacher/{teacherId} -> 200" +
+            "when this subject by id not exists return status 404 Not Found")
     void should_update_subject_about_the_present_existing_teacher() throws Exception {
         Teacher teacher1 = serviceTeacher.findById(1L).orElse(null);
         mockMvc.perform(MockMvcRequestBuilders.put("/subject/5/teacher/1")
@@ -54,7 +53,8 @@ public class AcceptanceSubjectTests {
     }
 
     @Test
-    @DisplayName("http://localhost:8080/subject/findDistinctTop1ByName -> 200")
+    @DisplayName("http://localhost:8080/subject/findDistinctTopByName -> 200" +
+            "when dataBase is empty returning empty list")
     public void should_return_list_subject_distinct_top_by_name() throws Exception {
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/subject/findDistinctTopByName/Informatyka")
                 .contentType(MediaType.APPLICATION_JSON))
@@ -70,14 +70,16 @@ public class AcceptanceSubjectTests {
     }
 
     @Test
-    @DisplayName("https://localhost:8080/subject/deleteById/{id} -> 200")
+    @DisplayName("https://localhost:8080/subject/deleteById/{id} -> 200" +
+            " when this subject by id not exists returning status 500 Internal Server Error")
     public void should_delete_subject_by_id() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.delete("/subject/deleteById/3"))
                 .andExpect(status().isOk());
     }
 
     @Test
-    @DisplayName("http://localhost:8080/subject/findSubjectWhereNameLikeString -> 200")
+    @DisplayName("http://localhost:8080/subject/findSubjectWhereNameLikeString -> 200" +
+            " when this string not exists returning empty list")
     public void findSubjectWhereNameLikeString() throws Exception {
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/subject/findSubjectWhereNameLikeString")
                 .contentType(MediaType.APPLICATION_JSON))
@@ -99,7 +101,8 @@ public class AcceptanceSubjectTests {
     }
 
     @Test
-    @DisplayName("http://localhost:8080/subject/subjectByName/{name} ->200")
+    @DisplayName("http://localhost:8080/subject/subjectByName/{name} ->200" +
+            " when subject about this name not exists returning null")
     public void should_return_subject_by_name() throws Exception {
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/subject/subjectByName/Informatyka")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -116,7 +119,8 @@ public class AcceptanceSubjectTests {
     }
 
     @Test
-    @DisplayName("http://localhost:8080/subject/subjectById/{id} ->200")
+    @DisplayName("http://localhost:8080/subject/subjectById/{id} ->200" +
+            "when this subject by id not exists returning status 404 Not Found")
     public void should_return_subject_by_id() throws Exception {
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/subject/subjectById/1")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -133,7 +137,8 @@ public class AcceptanceSubjectTests {
     }
 
     @Test
-    @DisplayName("http://localhost:8080/subject/getAllSubjects -> 200")
+    @DisplayName("http://localhost:8080/subject/getAllSubjects -> 200" +
+            "when this subjects not exists returning status 404 Not Found")
     public void should_return_all_Subject() throws Exception {
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("subject/getAllSubjects"))
                 .andDo(print())
@@ -148,7 +153,8 @@ public class AcceptanceSubjectTests {
     }
 
     @Test
-    @DisplayName("http://localhost:8080/subject/addSubject -> 200")
+    @DisplayName("http://localhost:8080/subject/addSubject -> 200" +
+            "when this subject about this id exists this been override")
     public void should_add_new_subject() throws Exception {
         Teacher teacher = new Teacher();
         mockMvc.perform(MockMvcRequestBuilders.post("/subject/addSubject")
