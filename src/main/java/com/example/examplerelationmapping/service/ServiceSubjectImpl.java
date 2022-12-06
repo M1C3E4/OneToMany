@@ -3,6 +3,7 @@ package com.example.examplerelationmapping.service;
 import com.example.examplerelationmapping.model.Subject;
 import com.example.examplerelationmapping.port.ServiceSubject;
 import com.example.examplerelationmapping.repository.SubjectRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
