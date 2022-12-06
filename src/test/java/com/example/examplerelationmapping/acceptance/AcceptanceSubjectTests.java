@@ -1,5 +1,7 @@
-package com.example.examplerelationmapping.model;
+package com.example.examplerelationmapping.acceptance;
 
+import com.example.examplerelationmapping.model.Subject;
+import com.example.examplerelationmapping.model.Teacher;
 import com.example.examplerelationmapping.service.ServiceTeacherImpl;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
