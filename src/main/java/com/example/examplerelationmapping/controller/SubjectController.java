@@ -4,7 +4,6 @@ import com.example.examplerelationmapping.model.Subject;
 import com.example.examplerelationmapping.model.Teacher;
 import com.example.examplerelationmapping.service.ServiceSubjectImpl;
 import com.example.examplerelationmapping.service.ServiceTeacherImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
@@ -12,10 +11,14 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/subject")
 public class SubjectController {
-    @Autowired
-    private ServiceSubjectImpl serviceSubject;
-    @Autowired
-    private ServiceTeacherImpl serviceTeacher;
+
+    private final ServiceSubjectImpl serviceSubject;
+    private final ServiceTeacherImpl serviceTeacher;
+
+    public SubjectController(ServiceSubjectImpl serviceSubject, ServiceTeacherImpl serviceTeacher) {
+        this.serviceSubject = serviceSubject;
+        this.serviceTeacher = serviceTeacher;
+    }
 
     @GetMapping("/findDistinctTopByName/{name}")
     List<Subject> findDistinctTop1ByName(@PathVariable String name){return serviceSubject.findDistinctTop1ByName(name);}

@@ -12,7 +12,7 @@ import java.util.Optional;
 @Repository
 public interface SubjectRepository extends JpaRepository<Subject, Long> {
     Optional<Subject> findByName(String name);
-    @Query(value = "SELECT t from Subject t WHERE t.name LIKE '%ciej%' ")
+    @Query(value = "SELECT t from Subject t WHERE t.name LIKE '%cfgsd%' ")
     List<Subject> findSubjectWhereLikeString();
     List<Subject> findDistinctTop1ByName(String name);
 }
