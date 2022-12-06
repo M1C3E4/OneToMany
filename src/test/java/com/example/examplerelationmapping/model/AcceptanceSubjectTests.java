@@ -94,9 +94,6 @@ public class AcceptanceSubjectTests {
         assertEquals(expected1.getId(), subject.get(1).getId());
         assertEquals(expected1.getName(), subject.get(1).getName());
         assertEquals(expected1.getTeacher(), teacher1);
-
-
-
     }
 
     @Test
