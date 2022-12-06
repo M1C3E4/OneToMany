@@ -37,6 +37,21 @@ public class AcceptanceSubjectTests {
     private ObjectMapper objectMapper;
 
     @Test
+    @DisplayName("https://localhost:8080/subject/{subjectId}/teacher/{teacherId}")
+    void should_update_subject_about_the_present_existing_teacher() throws Exception {
+        Teacher teacher1 = serviceTeacher.findById(1L).orElse(null);
+        mockMvc.perform(MockMvcRequestBuilders.put("/subject/5/teacher/1")
+                        .content(asJsonString(new Subject(5L, "mama", teacher1)))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(5L))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("mama"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.teacher.id").value(teacher1.getId()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.teacher.name").value(teacher1.getName()));
+    }
+
+    @Test
     @DisplayName("http://localhost:8080/subject/findDistinctTop1ByName -> 200")
     public void should_return_list_subject_distinct_top_by_name() throws Exception {
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/subject/findDistinctTopByName/Informatyka")
@@ -50,7 +65,6 @@ public class AcceptanceSubjectTests {
         assertEquals(expected.getId(), subjects.get(0).getId());
         assertEquals(expected.getName(), subjects.get(0).getName());
         assertEquals(expected.getTeacher(), teacher);
-
     }
 
     @Test
