@@ -24,6 +24,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -35,6 +36,28 @@ public class SubjectControllerTest {
     private ObjectMapper objectMapper;
     @MockBean(ServiceSubjectImpl.class)
     private ServiceSubjectImpl serviceSubjectImpl;
+
+    @Test
+    @DisplayName("http://localhost:8080/subject/findSubjectWhereNameLikeString -> 200" +
+            " when this string not exists returning empty list")
+    public void find_subject_where_name_like_string() throws Exception {
+        Subject subject = new Subject(1L, "Informatyka", null);
+        List<Subject> subjectList = new ArrayList<>();
+        subjectList.add(subject);
+        Mockito.when(serviceSubjectImpl.findSubjectWhereLikeString()).thenReturn(subjectList);
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/subject/findSubjectWhereNameLikeString")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        String jsonAsString = resultActions.andReturn().getResponse().getContentAsString();
+        List<Subject> listSubject = objectMapper.readValue(jsonAsString, new TypeReference<>() {
+        });
+        assertEquals(subject.getId(), listSubject.get(0).getId());
+        assertEquals(subject.getName(), listSubject.get(0).getName());
+        assertEquals(subject.getTeacher(), listSubject.get(0).getTeacher());
+
+    }
 
     @Test
     @DisplayName("Unit test for subjectController https://localhost:8080/subject/{subjectId}/teacher/{teacherId} -> 200" +

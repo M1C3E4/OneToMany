@@ -80,7 +80,7 @@ public class AcceptanceSubjectTests {
     @Test
     @DisplayName("http://localhost:8080/subject/findSubjectWhereNameLikeString -> 200" +
             " when this string not exists returning empty list")
-    public void findSubjectWhereNameLikeString() throws Exception {
+    public void find_subject_where_name_like_string() throws Exception {
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/subject/findSubjectWhereNameLikeString")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
