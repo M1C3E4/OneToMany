@@ -33,9 +33,28 @@ public class SubjectControllerTest {
     private  MockMvc mockMvc;
     @Autowired
     private ObjectMapper objectMapper;
-
     @MockBean(ServiceSubjectImpl.class)
     private ServiceSubjectImpl serviceSubjectImpl;
+
+    @Test
+    @DisplayName("Unit test for subjectController https://localhost:8080/subject/{subjectId}/teacher/{teacherId} -> 200" +
+            "when this subject by id not exists return status 404 Not Found")
+    void should_update_subject_about_the_present_existing_teacher() throws Exception {
+        Teacher teacher = new Teacher(1L, "Maciej", new ArrayList<>());
+        Subject subject = new Subject(1L, "Informatyka", null);
+        Mockito.when(serviceSubjectImpl.findById(1L)).thenReturn(Optional.of(subject));
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/subject/1/teacher/1")
+                .content(asJsonString(new Subject(1L, "Informatyka", teacher)))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+                assertEquals(1L,subject.getId());
+                assertEquals("Informatyka", subject.getName());
+                assertEquals(1L, teacher.getId());
+                assertEquals("Maciej", teacher.getName());
+    }
 
     @Test
     @DisplayName("Unit test for subjectController http://localhost:8080/subject/subjectById/1 -> 200" +
@@ -93,5 +112,12 @@ public class SubjectControllerTest {
         assertEquals("Informatyka", response.get(0).getName());
         assertEquals(1L, response.get(0).getTeacher().getId());
         assertEquals("Maciej", response.get(0).getTeacher().getName());
+    }
+    public static String asJsonString(final Object object) {
+        try {
+            return new ObjectMapper().writeValueAsString(object);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }
