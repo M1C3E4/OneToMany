@@ -9,13 +9,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/teacher")
 public class TeacherController {
-
     private final ServiceTeacherImpl serviceTeacherImpl;
-
     public TeacherController(ServiceTeacherImpl serviceTeacherImpl) {
         this.serviceTeacherImpl = serviceTeacherImpl;
     }
-
     @GetMapping("/getAllTeachers")
     List<Teacher> getTeachers(){
         return serviceTeacherImpl.findAll();
