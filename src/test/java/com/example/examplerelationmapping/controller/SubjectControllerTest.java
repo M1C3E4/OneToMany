@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.test.util.AssertionErrors.assertNull;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -38,7 +39,47 @@ public class SubjectControllerTest {
     private ServiceSubjectImpl serviceSubjectImpl;
 
     @Test
-    @DisplayName("http://localhost:8080/subject/findSubjectWhereNameLikeString -> 200" +
+    @DisplayName("Unit test for subjectController http://localhost:8080/subject/subjectByName/{name} ->200" +
+            " when subject about this name not exists returning null")
+    public void should_return_subject_by_name() throws Exception {
+        Subject subject = new Subject(1L, "Informatyka", null);
+        Mockito.when(serviceSubjectImpl.findByName("Informatyka")).thenReturn(Optional.of(subject));
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/subject/subjectByName/Informatyka")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .param("name", "Informatyka"))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        String jsonAsString = resultActions.andReturn().getResponse().getContentAsString();
+        Subject response = objectMapper.readValue(jsonAsString, Subject.class);
+
+        assertEquals(1L, response.getId());
+        assertEquals("Informatyka", response.getName());
+        assertNull(null, response.getTeacher());
+    }
+
+    @Test
+    @DisplayName("Unit test for subjectController http://localhost:8080/subject/getAllSubjects -> 200" +
+            "when this subjects not exists returning status 404 Not Found")
+    public void should_return_all_Subject() throws Exception {
+        Subject subject = new Subject(1L, "Informatyka", null);
+        List<Subject> subjectList = new ArrayList<>();
+        subjectList.add(subject);
+        Mockito.when(serviceSubjectImpl.findAll()).thenReturn(subjectList);
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/subject/getAllSubjects"))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        String jsonAsString = resultActions.andReturn().getResponse().getContentAsString();
+        List<Subject> response = objectMapper.readValue(jsonAsString, new TypeReference<>() {});
+
+        assertEquals(1L, response.get(0).getId());
+        assertEquals("Informatyka", response.get(0).getName());
+        assertNull(null, response.get(0).getTeacher());
+    }
+
+    @Test
+    @DisplayName("Unit test for subjectController http://localhost:8080/subject/findSubjectWhereNameLikeString -> 200" +
             " when this string not exists returning empty list")
     public void find_subject_where_name_like_string() throws Exception {
         Subject subject = new Subject(1L, "Informatyka", null);
@@ -56,7 +97,6 @@ public class SubjectControllerTest {
         assertEquals(subject.getId(), listSubject.get(0).getId());
         assertEquals(subject.getName(), listSubject.get(0).getName());
         assertEquals(subject.getTeacher(), listSubject.get(0).getTeacher());
-
     }
 
     @Test
@@ -108,7 +148,6 @@ public class SubjectControllerTest {
         Mockito.when(serviceSubjectImpl.findById(1L)).thenReturn(Optional.of(new Subject(1L, "Informatyka", null)));
         mockMvc.perform((MockMvcRequestBuilders.delete("/subject/deleteById/1")))
                 .andExpect(MockMvcResultMatchers.status().isOk());
-
     }
 
     @Test
@@ -136,6 +175,23 @@ public class SubjectControllerTest {
         assertEquals(1L, response.get(0).getTeacher().getId());
         assertEquals("Maciej", response.get(0).getTeacher().getName());
     }
+
+    @Test
+    @DisplayName("Unit test for subjectController http://localhost:8080/subject/addSubject -> 200" +
+            "when this subject about this id exists this been override")
+    public void should_add_new_subject() throws Exception {
+        Teacher teacher = new Teacher();
+        Subject subject = new Subject(1L, "Informatyka", teacher);
+        Mockito.when(serviceSubjectImpl.createSubject(subject)).thenReturn(subject);
+        mockMvc.perform(MockMvcRequestBuilders.post("/subject/addSubject")
+                        .content(asJsonString(new Subject(1L, "Informatyka", teacher)))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(MockMvcResultMatchers.status().isOk());
+        Subject response = objectMapper.readValue(asJsonString(subject), Subject.class);
+        assertEquals(1L , response.getId());
+    }
+
     public static String asJsonString(final Object object) {
         try {
             return new ObjectMapper().writeValueAsString(object);

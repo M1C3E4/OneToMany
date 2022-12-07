@@ -7,6 +7,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -26,15 +27,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class AcceptanceSubjectTests {
 
-    private final ServiceTeacherImpl serviceTeacher;
-    private final MockMvc mockMvc;
-    private final ObjectMapper objectMapper;
-
-    public AcceptanceSubjectTests(ServiceTeacherImpl serviceTeacher, MockMvc mockMvc, ObjectMapper objectMapper) {
-        this.serviceTeacher = serviceTeacher;
-        this.mockMvc = mockMvc;
-        this.objectMapper = objectMapper;
-    }
+    @Autowired
+    private ServiceTeacherImpl serviceTeacher;
+    @Autowired
+    private MockMvc mockMvc;
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Test
     @DisplayName("https://localhost:8080/subject/{subjectId}/teacher/{teacherId} -> 200" +
