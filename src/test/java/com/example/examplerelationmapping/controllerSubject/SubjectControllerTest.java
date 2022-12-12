@@ -1,4 +1,4 @@
-package com.example.examplerelationmapping.controller;
+package com.example.examplerelationmapping.controllerSubject;
 
 import com.example.examplerelationmapping.model.Subject;
 import com.example.examplerelationmapping.model.Teacher;
@@ -41,7 +41,7 @@ public class SubjectControllerTest {
     @Test
     @DisplayName("Unit test for subjectController http://localhost:8080/subject/subjectByName/{name} ->200" +
             " when subject about this name not exists returning null")
-    public void should_return_subject_by_name() throws Exception {
+    public void should_return_subject_by_name_status200() throws Exception {
         Subject subject = new Subject(1L, "Informatyka", null);
         Mockito.when(serviceSubjectImpl.findByName("Informatyka")).thenReturn(Optional.of(subject));
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/subject/subjectByName/Informatyka")
@@ -61,7 +61,7 @@ public class SubjectControllerTest {
     @Test
     @DisplayName("Unit test for subjectController http://localhost:8080/subject/getAllSubjects -> 200" +
             "when this subjects not exists returning status 404 Not Found")
-    public void should_return_all_Subject() throws Exception {
+    public void should_return_all_Subject_status200() throws Exception {
         Subject subject = new Subject(1L, "Informatyka", null);
         List<Subject> subjectList = new ArrayList<>();
         subjectList.add(subject);
@@ -81,7 +81,7 @@ public class SubjectControllerTest {
     @Test
     @DisplayName("Unit test for subjectController http://localhost:8080/subject/findSubjectWhereNameLikeString -> 200" +
             " when this string not exists returning empty list")
-    public void find_subject_where_name_like_string() throws Exception {
+    public void find_subject_where_name_like_string_status200() throws Exception {
         Subject subject = new Subject(1L, "Informatyka", null);
         List<Subject> subjectList = new ArrayList<>();
         subjectList.add(subject);
@@ -102,7 +102,7 @@ public class SubjectControllerTest {
     @Test
     @DisplayName("Unit test for subjectController https://localhost:8080/subject/{subjectId}/teacher/{teacherId} -> 200" +
             "when this subject by id not exists return status 404 Not Found")
-    void should_update_subject_about_the_present_existing_teacher() throws Exception {
+    void should_update_subject_about_the_present_existing_teacher_status200() throws Exception {
         Teacher teacher = new Teacher(1L, "Maciej", new ArrayList<>());
         Subject subject = new Subject(1L, "Informatyka", null);
         Mockito.when(serviceSubjectImpl.findById(1L)).thenReturn(Optional.of(subject));
@@ -179,7 +179,7 @@ public class SubjectControllerTest {
     @Test
     @DisplayName("Unit test for subjectController http://localhost:8080/subject/addSubject -> 200" +
             "when this subject about this id exists this been override")
-    public void should_add_new_subject() throws Exception {
+    public void should_add_new_subject_status200() throws Exception {
         Teacher teacher = new Teacher();
         Subject subject = new Subject(1L, "Informatyka", teacher);
         Mockito.when(serviceSubjectImpl.createSubject(subject)).thenReturn(subject);

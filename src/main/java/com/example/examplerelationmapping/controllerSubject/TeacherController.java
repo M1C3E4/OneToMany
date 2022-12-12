@@ -1,4 +1,4 @@
-package com.example.examplerelationmapping.controller;
+package com.example.examplerelationmapping.controllerSubject;
 
 import com.example.examplerelationmapping.model.Teacher;
 import com.example.examplerelationmapping.service.ServiceTeacherImpl;
