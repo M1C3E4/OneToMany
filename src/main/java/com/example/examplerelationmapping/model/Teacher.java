@@ -9,6 +9,7 @@ import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -26,4 +27,6 @@ public class Teacher implements Serializable {
     private List<Subject> subject;
     @ManyToOne
     private School school;
+    @ManyToMany(mappedBy = "teacherSet")
+    private Set<Student> studentSet;
 }
