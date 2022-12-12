@@ -3,10 +3,12 @@ package com.example.examplerelationmapping.service;
 import com.example.examplerelationmapping.model.School;
 import com.example.examplerelationmapping.port.ServiceSchool;
 import com.example.examplerelationmapping.repository.SchoolRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class ServiceSchoolImpl implements ServiceSchool {
 
     private final SchoolRepository schoolRepository;

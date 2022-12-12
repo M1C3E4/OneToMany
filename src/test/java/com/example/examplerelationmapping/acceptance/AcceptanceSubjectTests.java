@@ -1,5 +1,6 @@
 package com.example.examplerelationmapping.acceptance;
 
+import com.example.examplerelationmapping.model.School;
 import com.example.examplerelationmapping.model.Subject;
 import com.example.examplerelationmapping.model.Teacher;
 import com.example.examplerelationmapping.service.ServiceTeacherImpl;
@@ -39,13 +40,13 @@ public class AcceptanceSubjectTests {
             "when this subject by id not exists return status 404 Not Found")
     void should_update_subject_about_the_present_existing_teacher() throws Exception {
         Teacher teacher1 = serviceTeacher.findById(1L).orElse(null);
-        mockMvc.perform(MockMvcRequestBuilders.put("/subject/5/teacher/1")
+        mockMvc.perform(MockMvcRequestBuilders.put("/subject/1/teacher/1")
                         .content(asJsonString(new Subject(5L, "mama", teacher1)))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(5L))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("mama"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1L))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Informatyka"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.teacher.id").value(teacher1.getId()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.teacher.name").value(teacher1.getName()));
     }
@@ -71,7 +72,7 @@ public class AcceptanceSubjectTests {
     @DisplayName("https://localhost:8080/subject/deleteById/{id} -> 200" +
             " when this subject by id not exists returning status 500 Internal Server Error")
     public void should_delete_subject_by_id() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.delete("/subject/deleteById/3"))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/subject/deleteById/12"))
                 .andExpect(status().isOk());
     }
 
@@ -84,18 +85,13 @@ public class AcceptanceSubjectTests {
                 .andDo(print())
                 .andExpect(status().isOk());
         Teacher teacher = serviceTeacher.findById(1L).orElse(null);
-        Teacher teacher1 = serviceTeacher.findById(4L).orElse(null);
         Subject expected = new Subject(1L, "Informatyka", teacher);
-        Subject expected1 = new Subject(2L, "Matematyka", teacher1);
         String jsonAsString = resultActions.andReturn().getResponse().getContentAsString();
         List<Subject> subject = objectMapper.readValue(jsonAsString, new TypeReference<>() {
         });
         assertEquals(expected.getId(), subject.get(0).getId());
         assertEquals(expected.getName(), subject.get(0).getName());
         assertEquals(expected.getTeacher(), teacher);
-        assertEquals(expected1.getId(), subject.get(1).getId());
-        assertEquals(expected1.getName(), subject.get(1).getName());
-        assertEquals(expected1.getTeacher(), teacher1);
     }
 
     @Test
@@ -138,10 +134,11 @@ public class AcceptanceSubjectTests {
     @DisplayName("http://localhost:8080/subject/getAllSubjects -> 200" +
             "when this subjects not exists returning status 404 Not Found")
     public void should_return_all_Subject() throws Exception {
-        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("subject/getAllSubjects"))
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/subject/getAllSubjects"))
                 .andDo(print())
                 .andExpect(status().isOk());
-        Teacher teacher = new Teacher(1L, "Maciej", new ArrayList<>());
+        School school = new School(2L, "I LO im. Tadeusza Kościuszko w Łukowie");
+        Teacher teacher = new Teacher(1L, "Maciej", new ArrayList<>(), school);
         Subject subject = new Subject(1L, "Informatyka", teacher);
         String jsonAsString = resultActions.andReturn().getResponse().getContentAsString();
         List<Subject> subject1 = objectMapper.readValue(jsonAsString, new TypeReference<>() {
