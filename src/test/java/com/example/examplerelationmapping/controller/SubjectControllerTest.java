@@ -1,5 +1,6 @@
 package com.example.examplerelationmapping.controller;
 
+import com.example.examplerelationmapping.model.School;
 import com.example.examplerelationmapping.model.Subject;
 import com.example.examplerelationmapping.model.Teacher;
 import com.example.examplerelationmapping.service.ServiceSubjectImpl;
@@ -103,7 +104,8 @@ public class SubjectControllerTest {
     @DisplayName("Unit test for subjectController https://localhost:8080/subject/{subjectId}/teacher/{teacherId} -> 200" +
             "when this subject by id not exists return status 404 Not Found")
     void should_update_subject_about_the_present_existing_teacher() throws Exception {
-        Teacher teacher = new Teacher(1L, "Maciej", new ArrayList<>());
+        School school = new School(2L, "I LO im. Tadeusza Kościuszko w Łukowie");
+        Teacher teacher = new Teacher(1L, "Maciej", new ArrayList<>(), school);
         Subject subject = new Subject(1L, "Informatyka", null);
         Mockito.when(serviceSubjectImpl.findById(1L)).thenReturn(Optional.of(subject));
 
@@ -123,7 +125,8 @@ public class SubjectControllerTest {
     @DisplayName("Unit test for subjectController http://localhost:8080/subject/subjectById/1 -> 200" +
             "when this subject by id not exists returning status 404 Not Found")
     public void should_return_subject_by_id_status200() throws Exception{
-        Teacher teacher = new Teacher(1L, "Maciej", null);
+        School school = new School(2L, "I LO im. Tadeusza Kościuszko w Łukowie");
+        Teacher teacher = new Teacher(1L, "Maciej", null, school);
         Mockito.when(serviceSubjectImpl.findById(1L)).thenReturn(Optional.of(new Subject(1L, "Informatyka", teacher)));
 
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/subject/subjectById/1")
@@ -154,7 +157,8 @@ public class SubjectControllerTest {
     @DisplayName("Unit test for subjectController http://localhost:8080/subject/findDistinctTopByName/Informatyka ->200" +
             "when dataBase is empty returning empty list")
     void should_return_top_1_subject_by_name_distinct_status200() throws Exception {
-        Teacher teacher = new Teacher(1L, "Maciej", new ArrayList<>());
+        School school = new School(2L, "I LO im. Tadeusza Kościuszko w Łukowie");
+        Teacher teacher = new Teacher(1L, "Maciej", new ArrayList<>(), school);
         Subject subject = new Subject(1L, "Informatyka", teacher);
         List<Subject> subjectList = new ArrayList<>();
         subjectList.add(subject);
